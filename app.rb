@@ -2,6 +2,8 @@
 require "sinatra"
 require "sinatra/reloader"
 require "net/telnet"
+require "time"
+require "pp"
 
 require "./lib/song"
 
@@ -31,6 +33,39 @@ def fetch_songs(cmd)
 	songs
 end
 
+
+
+post '/add/:file' do |file|
+	content_type :json
+	term = Net::Telnet.new("Host" => $mpdhost, "Port" => $mpdport, 
+		"Prompt"=>/OK/, "Telnetmode" => false, "Binmode" => true)
+	term.waitfor /^OK.*$/
+	res = term.cmd("add #{file}")
+	term.close
+	{action: 'add', file: file, responce: res}.to_json
+end
+
+
+delete '/delete/:id' do |id|
+	content_type :json
+	term = Net::Telnet.new("Host" => $mpdhost, "Port" => $mpdport, 
+		"Prompt"=>/OK/, "Telnetmode" => false, "Binmode" => true)
+	term.waitfor /^OK.*$/
+	res = term.cmd("deleteid #{id}")
+	term.close
+	{action: 'delete', id: id, responce: res}.to_json
+end
+
+
+post '/play/:id' do |id|
+	content_type :json
+	term = Net::Telnet.new("Host" => $mpdhost, "Port" => $mpdport, 
+		"Prompt"=>/OK/, "Telnetmode" => false, "Binmode" => true)
+	term.waitfor /^OK.*$/
+	res = term.cmd("playlistid #{id}")
+	term.close
+	{action: 'play', id: id, responce: res}.to_json
+end
 
 
 get '/playlist' do
