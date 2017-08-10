@@ -5,8 +5,8 @@ require "net/telnet"
 
 require "./lib/song"
 
-mpdhost = "soundwave.local"
-mpdport = 6600
+$mpdhost = "soundwave.local"
+$mpdport = 6600
 
 
 get '/' do
@@ -36,7 +36,7 @@ end
 get '/playlistinfo' do
 	begin
 		@title = "PlayList"
-		@term = Net::Telnet.new("Host" => mpdhost, "Port" => mpdport, 
+		@term = Net::Telnet.new("Host" => $mpdhost, "Port" => $mpdport, 
 			"Prompt"=>/OK/, "Telnetmode" => false, "Binmode" => true)
 		@term.waitfor /^OK.*$/
 		@songs = fetch_songs 'playlistinfo'
@@ -44,7 +44,7 @@ get '/playlistinfo' do
 		# pp songs
 
 	rescue Errno::ECONNREFUSED
-		"#{mpdhost}:#{mpdport} mpdホストへの接続失敗"
+		"#{$mpdhost}:#{$mpdport} mpdホストへの接続失敗"
 	end
 end
 
@@ -52,7 +52,7 @@ end
 get '/listall' do
 	begin
 		@title = "List"
-		@term = Net::Telnet.new("Host" => mpdhost, "Port" => mpdport, 
+		@term = Net::Telnet.new("Host" => $mpdhost, "Port" => $mpdport, 
 			"Prompt"=>/OK/, "Telnetmode" => false, "Binmode" => true)
 		@term.waitfor /^OK.*$/
 
@@ -63,7 +63,7 @@ get '/listall' do
 		# pp songs
 
 	rescue Errno::ECONNREFUSED
-		"#{mpdhost}:#{mpdport} mpdホストへの接続失敗"
+		"#{$mpdhost}:#{$mpdport} mpdホストへの接続失敗"
 	end
 end
 
