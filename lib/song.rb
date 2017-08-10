@@ -7,14 +7,15 @@ class Song < Hash
 		else
 			args.each do |s|
 				k,v = s.split(/: /)
+				k.downcase!
 				case k
 				when 'file'
 					Song.parse_file self, k, v
-				when /-Modified/
+				when /-modified/
 					self[k] = DateTime.parse v
-				when 'Time'
+				when 'time'
 					self[k] = v.to_f
-				when 'Pos', 'Id'
+				when 'pos', 'id'
 					self[k] = v.to_i
 				else
 					self[k] = v
@@ -33,16 +34,13 @@ class Song < Hash
 	end
 
 
-	def title
-		self['title']
+	def method_missing(method_name)
+		method_key = method_name.to_s
+		if self.key? method_key
+			self[method_key]
+		else
+			super
+		end
 	end
-
-	def onair
-		self['onair']
-	end
-
-	def time
-		self['Time']
-	end	
 	
 end
