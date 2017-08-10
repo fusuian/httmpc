@@ -1,0 +1,60 @@
+<h1><%= @title %></h1>
+
+<div class="col-xs-12 col-sm-6">
+	<div class="list-group">
+		<% @songs.each do |song| %>
+			<div>
+				<button value="<%= song.id %>" class="play list-group-item col-xs-10"> 
+					<span> <%= song.id %> </span>
+					<span> <%= song.title %> </span>
+					<span> <%= song.onair.strftime("%y/%m/%d %H:%M") %> </span>
+					<span> <%= (Time.parse("1/1") + song.time).strftime("%H:%M:%S") %> </span>
+				</button>
+				<button class="delete btn-danger col-xs-2" value="<%= song.id %>">Delete</button>
+			</div>
+		<% end %>
+	</div>
+</div>
+
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="js/bootstrap.min.js"></script>
+<script type="text/javascript">
+  $(function () {
+    $('.delete').on('click', function (eo) {
+      var file = eo.target.value;
+      var url = '<%= url('/delete/') %>' + file;
+      console.log(url);
+      $.ajax({
+      	type: 'DELETE',
+      	url: url, 
+      	// dataType: 'json',
+      	success: function (json) {
+      		console.log(json);
+      		eo.target.parentElement.remove();	
+      	},
+      	error: function (error) {
+      		console.log('error: '+error);
+      	}
+      });
+    });
+
+    $('.play').on('click', function (eo) {
+      var id = eo.target.value;
+      var url = '<%= url('/play/') %>' + id;
+      console.log(url);
+      $.ajax({
+      	type: 'POST',
+      	url: url, 
+      	// dataType: 'json',
+      	success: function (json) {
+      		console.log(json);
+      	},
+      	error: function (error) {
+      		console.log('error: '+error);
+      	}
+      });
+    });
+  });
+</script>

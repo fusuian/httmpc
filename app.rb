@@ -33,14 +33,14 @@ end
 
 
 
-get '/playlistinfo' do
+get '/playlist' do
 	begin
 		@title = "PlayList"
 		@term = Net::Telnet.new("Host" => $mpdhost, "Port" => $mpdport, 
 			"Prompt"=>/OK/, "Telnetmode" => false, "Binmode" => true)
 		@term.waitfor /^OK.*$/
 		@songs = fetch_songs 'playlistinfo'
-		erb :list, layout: :template
+		erb :playlist, layout: :template
 		# pp songs
 
 	rescue Errno::ECONNREFUSED
@@ -56,10 +56,10 @@ get '/listall' do
 			"Prompt"=>/OK/, "Telnetmode" => false, "Binmode" => true)
 		@term.waitfor /^OK.*$/
 
-		@songs = fetch_songs 'listall'
+		@songs = fetch_songs 'listallinfo'
 		# @songs = @songs.sort_by {|s| s.onair }.reverse
 		
-		erb :list, layout: :template
+		erb :listall, layout: :template
 		# pp songs
 
 	rescue Errno::ECONNREFUSED
