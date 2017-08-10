@@ -26,6 +26,7 @@ class Song < Hash
 
 
 	def self.parse_file(hash,k,v)
+		v.force_encoding('utf-8')
 		hash[k] = v
 		v =~ /\.(\d{4}-\d{2}-\d{2}T\d{2}=\d{2})\./
 		onair = $1.sub(/=/, ":")
