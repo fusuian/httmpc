@@ -1,0 +1,13 @@
+<h1><%= @title %></h1>
+
+<div class="col-xs-12 col-sm-6">
+	<div class="list-group">
+		<% @songs.each do |song| %>
+			<a href="#" class="list-group-item"> 
+				<span > <%= song.title %> </span>
+				<span > <%= song.onair.strftime("%y/%m/%d %H:%M") %> </span>
+			</a>
+			
+		<% end %>
+	</div>
+</div>
