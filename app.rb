@@ -95,5 +95,33 @@ get '/listall' do
 end
 
 
+get '/playing' do 
+	begin
+		res = term.cmd('status')
+		status = stat2hash(res)
+		
+		playing = {}
+		playing['state'] = status['state']
 
+		if playing['state'] == 'stop'
+			playing['title'] = 'stopping'
+			playing['elapsed'] = '--:--'
+			playing['time'] = '--:--'
+		
+		else
+			playing['elapsed'] = status['elapsed'].to_f
+			songs = fetch_songs('currentsong')
+			# pp ['songs: ', songs]
+			song = songs[0]
+			playing['title'] = song.title
+			playing['time'] = song.time.to_i
+		end
+		
+		playing.to_json
+
+	rescue Errno::ECONNRESET, Errno::EPIPE
+		return {}.to_json
+	end
+
+end
 
