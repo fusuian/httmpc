@@ -21,6 +21,8 @@ def fetch_songs(cmd)
 	songs = []
 	info = []
 	res = term.cmd(cmd)
+	return [] unless res # 曲がない
+
 	infos = res.split(/\n/)
 	infos.pop
 	infos.each do |s|
