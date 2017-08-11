@@ -124,6 +124,17 @@ get '/listall' do
 end
 
 
+def stat2hash(res)
+	stats = res.split(/\n/)
+	stats.pop
+	hash = {}
+	stats.each do |s|
+		k,v = s.split(/: /)
+		hash[k] = v
+	end
+	hash
+end
+
 get '/playing' do 
 	begin
 		res = term.cmd('status')
