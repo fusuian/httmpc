@@ -20,9 +20,10 @@ end
 def fetch_songs(cmd)
 	songs = []
 	info = []
-	res = @term.cmd(cmd)
-	@term.close
-	res.split(/\n/).each do |s|
+	res = term.cmd(cmd)
+	infos = res.split(/\n/)
+	infos.pop
+	infos.each do |s|
 	 	if s =~ /^file:/ && info.size > 0
 	 		songs << Song.new(info)
 	 		info = []
@@ -33,37 +34,35 @@ def fetch_songs(cmd)
 	songs
 end
 
+@term = nil
 
+def term
+	pp ['term', @term && @term.sock.closed?]
+	if @term == nil || @term.sock.closed?
+		@term = Net::Telnet.new("Host" => $mpdhost, "Port" => $mpdport, 
+				"Prompt"=>/OK/, "Telnetmode" => false, "Binmode" => true)
+		@term.waitfor /^OK.*$/
+	end
+	@term
+end
 
 post '/add/:file' do |file|
 	content_type :json
-	term = Net::Telnet.new("Host" => $mpdhost, "Port" => $mpdport, 
-		"Prompt"=>/OK/, "Telnetmode" => false, "Binmode" => true)
-	term.waitfor /^OK.*$/
 	res = term.cmd("add #{file}")
-	term.close
 	{action: 'add', file: file, responce: res}.to_json
 end
 
 
 delete '/delete/:id' do |id|
 	content_type :json
-	term = Net::Telnet.new("Host" => $mpdhost, "Port" => $mpdport, 
-		"Prompt"=>/OK/, "Telnetmode" => false, "Binmode" => true)
-	term.waitfor /^OK.*$/
 	res = term.cmd("deleteid #{id}")
-	term.close
 	{action: 'delete', id: id, responce: res}.to_json
 end
 
 
 post '/play/:id' do |id|
 	content_type :json
-	term = Net::Telnet.new("Host" => $mpdhost, "Port" => $mpdport, 
-		"Prompt"=>/OK/, "Telnetmode" => false, "Binmode" => true)
-	term.waitfor /^OK.*$/
 	res = term.cmd("playlistid #{id}")
-	term.close
 	{action: 'play', id: id, responce: res}.to_json
 end
 
@@ -71,9 +70,6 @@ end
 get '/playlist' do
 	begin
 		@title = "PlayList"
-		@term = Net::Telnet.new("Host" => $mpdhost, "Port" => $mpdport, 
-			"Prompt"=>/OK/, "Telnetmode" => false, "Binmode" => true)
-		@term.waitfor /^OK.*$/
 		@songs = fetch_songs 'playlistinfo'
 		erb :playlist, layout: :template
 		# pp songs
@@ -87,10 +83,6 @@ end
 get '/listall' do
 	begin
 		@title = "List"
-		@term = Net::Telnet.new("Host" => $mpdhost, "Port" => $mpdport, 
-			"Prompt"=>/OK/, "Telnetmode" => false, "Binmode" => true)
-		@term.waitfor /^OK.*$/
-
 		@songs = fetch_songs 'listallinfo'
 		# @songs = @songs.sort_by {|s| s.onair }.reverse
 		
