@@ -2,24 +2,20 @@ require "date"
 
 class Song < Hash
 	def initialize(args)
-		if args.size == 1
-			Song.parse_file self, *args.first.split(/: /)
-		else
-			args.each do |s|
-				k,v = s.split(/: /)
-				k.downcase!
-				case k
-				when 'file'
-					Song.parse_file self, k, v
-				when /-modified/
-					self[k] = DateTime.parse v
-				when 'time'
-					self[k] = v.to_f
-				when 'pos', 'id'
-					self[k] = v.to_i
-				else
-					self[k] = v
-				end
+		args.each do |s|
+			k,v = s.split(/: /)
+			k.downcase!
+			case k
+			when 'file'
+				Song.parse_file self, k, v
+			when /-modified/
+				self[k] = DateTime.parse v
+			when 'time'
+				self[k] = v.to_f
+			when 'pos', 'id'
+				self[k] = v.to_i
+			else
+				self[k] = v
 			end
 		end
 	end
