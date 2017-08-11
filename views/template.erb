@@ -12,9 +12,6 @@
 
   </head>
   <body>
-    <div class="button_group">
-    <a href="<%= url('/playlist') %>" class="btn btn-info btn-lg">Playlist</a>
-    <a href="<%= url('/listall') %>" class="btn btn-info btn-lg">All List</a>
     <div class="container"> 
       <div class="button-group-justified button-group-lg">
         <a href="<%= url('/playlist') %>" class="btn btn-info">Playlist</a>
@@ -26,6 +23,20 @@
         </div>
         <div class="row">
           <span id="elapsed"></span> / <span id="time"></span>
+        </div>
+        <div class="row">
+          <button class="btn" id="previous"><span class="glyphicon glyphicon-step-backward"></span></button>
+          <button class="btn" id="play"><span class="glyphicon glyphicon-play"></span></button>
+          <button class="btn" id="pause"><span class="glyphicon glyphicon-pause"></span></button>
+          <button class="btn" id="next"><span class="glyphicon glyphicon-step-forward"></span></button>
+        </div>
+        <div class="row">
+          <button class="btn seekcur" value="-900"><span class="glyphicon glyphicon-fast-backward"> 15min</span></button>
+          <button class="btn seekcur" value="-60"><span class="glyphicon glyphicon-fast-backward"> 1min</span></button>
+          <button class="btn seekcur" value="-15"><span class="glyphicon glyphicon-fast-backward"> 15sec</span></button>
+          <button class="btn seekcur" value="+15"> 15sec <span class="glyphicon glyphicon-fast-forward"></span> </button>
+          <button class="btn seekcur" value="+60"> 1min <span class="glyphicon glyphicon-fast-forward"></span> </button>
+          <button class="btn seekcur" value="+900"> 15min <span class="glyphicon glyphicon-fast-forward"></span> </button>
         </div>
       </div>
       <%= yield %>
@@ -53,6 +64,66 @@
         });
        // body...
       }, 300);
+
+        $(function () {
+          $('#play').on('click', function (eo) {
+            $.ajax({
+              type: 'POST',
+              url: '<%= url('/play') %>'
+            }).done( function(res) {
+              console.log(res);
+            }).fail( function(error) {
+              console.log('error: '+error);
+            });
+          });
+
+          $('#pause').on('click', function (eo) {
+            $.ajax({
+              type: 'POST',
+              url: '<%= url('/pause') %>'
+            }).done( function(res) {
+              console.log(res);
+            }).fail( function(error) {
+              console.log('error: '+error);
+            });
+          });
+
+          $('#next').on('click', function (eo) {
+            $.ajax({
+              type: 'POST',
+              url: '<%= url('/next') %>'
+            }).done( function(res) {
+              console.log(res);
+            }).fail( function(error) {
+              console.log('error: '+error);
+            });
+          });
+
+          $('#previous').on('click', function (eo) {
+            $.ajax({
+              type: 'POST',
+              url: '<%= url('/previous') %>'
+            }).done( function(res) {
+              console.log(res);
+            }).fail( function(error) {
+              console.log('error: '+error);
+            });
+          });
+
+          $('.seekcur').on('click', function (eo) {
+            var sec = eo.target.value || eo.target.parentElement.value;
+            console.log('seekcur '+sec);
+            $.ajax({
+              type: 'POST',
+              url: '<%= url('/seekcur/') %>' + sec
+            }).done( function(res) {
+              console.log(res);
+            }).fail( function(error) {
+              console.log('error: '+error);
+            });
+          });
+
+        });
     </script>
   </body>
 </html>

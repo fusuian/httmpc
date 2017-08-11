@@ -66,6 +66,35 @@ post '/play/:id' do |id|
 	{action: 'play', id: id, responce: res}.to_json
 end
 
+post '/play' do
+	content_type :text
+	term.cmd("play")
+end
+
+
+post '/pause' do 
+	content_type :text
+	term.cmd("pause")
+end
+
+
+post '/next' do
+	content_type :text
+	term.cmd("next")
+end
+
+post '/previous' do
+	content_type :text
+	term.cmd("previous")
+end
+
+
+post '/seekcur/:sec' do |sec|
+	content_type :text
+	res = term.cmd("seekcur #{sec}")
+	"#{res}: seekcur #{sec}"
+end
+
 
 get '/playlist' do
 	begin
