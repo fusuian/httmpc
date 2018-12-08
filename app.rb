@@ -1,7 +1,6 @@
 #!/usr/bin/env ruby
-require "sinatra"
-require "sinatra/reloader"
-require "net/telnet"
+Bundler.setup
+Bundler.require
 require "time"
 require "pp"
 
