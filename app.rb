@@ -19,7 +19,7 @@ end
 def fetch_songs(cmd)
 	songs = []
 	info = []
-	res = term.cmd(cmd)
+	res = term {|t| t.cmd(cmd)}
 	return [] unless res # 曲がない
 
 	infos = res.split(/\n/)
@@ -35,64 +35,64 @@ def fetch_songs(cmd)
 	songs
 end
 
-@term = nil
 
 def term
-	pp ['term', @term && @term.sock.closed?]
-	if @term == nil || @term.sock.closed?
-		@term = Net::Telnet.new("Host" => $mpdhost, "Port" => $mpdport, 
+	term = Net::Telnet.new("Host" => $mpdhost, "Port" => $mpdport, 
 				"Prompt"=>/OK/, "Telnetmode" => false, "Binmode" => true)
-		@term.waitfor /^OK.*$/
-	end
-	@term
+	term.waitfor /^OK.*$/
+	res = yield term
+	term.close
+	res
 end
 
 post '/add/:file' do |file|
 	content_type :json
-	res = term.cmd("add #{file}")
+	res = term {|t| t.cmd "add #{file}" }
+	res.force_encoding('utf-8') if res
 	{action: 'add', file: file, responce: res}.to_json
 end
 
 
 delete '/delete/:id' do |id|
 	content_type :json
-	res = term.cmd("deleteid #{id}")
+	res = term {|t| t.cmd "deleteid #{id}" }
 	{action: 'delete', id: id, responce: res}.to_json
 end
 
 
 post '/play/:id' do |id|
 	content_type :json
-	res = term.cmd("playlistid #{id}")
+	res = term {|t| t.cmd("playid #{id}") }
+	res.force_encoding('utf-8') if res
 	{action: 'play', id: id, responce: res}.to_json
 end
 
 post '/play' do
 	content_type :text
-	term.cmd("play")
+	term {|t| t.cmd("play") }
 end
 
 
 post '/pause' do 
 	content_type :text
-	term.cmd("pause")
+	term {|t| t.cmd("pause") }
 end
 
 
 post '/next' do
 	content_type :text
-	term.cmd("next")
+	term {|t| t.cmd("next") }
 end
 
 post '/previous' do
 	content_type :text
-	term.cmd("previous")
+	term {|t| t.cmd("previous") }
 end
 
 
 post '/seekcur/:sec' do |sec|
 	content_type :text
-	res = term.cmd("seekcur #{sec}")
+	res = term {|t| t.cmd("seekcur #{sec}") }
 	"#{res}: seekcur #{sec}"
 end
 
@@ -112,9 +112,10 @@ end
 
 get '/listall' do
 	begin
-		@title = "List"
+		@title = "AllList"
+		res = term {|t| t.cmd("update") }
 		@songs = fetch_songs 'listallinfo'
-		# @songs = @songs.sort_by {|s| s.onair }.reverse
+		@songs = @songs.sort_by {|s| s.onair }.reverse
 		
 		erb :listall, layout: :template
 		# pp songs
@@ -138,7 +139,8 @@ end
 
 get '/playing' do 
 	begin
-		res = term.cmd('status')
+		res = term {|t| t.cmd('status') }
+		return {}.to_json unless res
 		status = stat2hash(res)
 		
 		playing = {}
