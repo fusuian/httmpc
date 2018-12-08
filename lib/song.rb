@@ -21,6 +21,14 @@ class Song < Hash
 	end
 
 
+	def playtime
+		if self.has_key? 'time'
+			(Time.parse("1/1") + time).strftime("%H:%M")
+		else
+			"?"
+		end
+	end
+
 	def self.parse_file(hash,k,v)
 		v.force_encoding('utf-8')
 		hash[k] = v
