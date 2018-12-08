@@ -1,20 +1,28 @@
-<h1><%= @title %></h1>
 
-<div class="col-xs-12 col-sm-6">
-	<div class="list-group">
-		<% @songs.each do |song| %>
-			<div>
-				<button value="<%= song.id %>" class="play list-group-item col-xs-10"> 
-					<span> <%= song.id %> </span>
-					<span> <%= song.title %> </span>
-					<span> <%= song.onair.strftime("%y/%m/%d %H:%M") %> </span>
-					<span> <%= (Time.parse("1/1") + song.time).strftime("%H:%M:%S") %> </span>
-				</button>
-				<button class="delete btn-danger col-xs-2" value="<%= song.id %>">Delete</button>
-			</div>
-		<% end %>
-	</div>
-</div>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th class="text-center">ID</th> 
+      <th class="text-center">タイトル</th> 
+      <th class="text-center">日付</th>
+      <th class="text-center">時:分</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @songs.each do |song| %>
+      <tr>
+        <td class="col-xs-1"> <%= song.id %> </td>
+        <td class="col-xs-6"> <button value="<%= song.id %>" class="btn btn-block btn-success play"><%= song.title %></button> </td>
+        <%# = url('/add/#{song.file}') %>
+        <td class="col-xs-2 text-center"> <span> <%= song.onair.strftime("%y/%m/%d %H:%M") %> </span> </td>
+        <td class="col-xs-2 text-center"> <span> <%= song.playtime %> </span> </td>
+        <td class="col-xs-1"> <button type="button" class="btn btn-danger delete" value="<%= song.id %>" aria-label="Left Align"> <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> </button> </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+
 
 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
@@ -22,9 +30,17 @@
 <script src="js/bootstrap.min.js"></script>
 <script type="text/javascript">
   $(function () {
+    $('#playlist-tab').addClass("active");
+    $('#alllist-tab').removeClass("active");
+
     $('.delete').on('click', function (eo) {
-      var file = eo.target.value;
-      var url = '<%= url('/delete/') %>' + file;
+      var button = eo.target;
+      if (button.tagName == "SPAN") {
+        button = eo.target.parentElement;
+      }
+
+      var id = button.value;
+      var url = '<%= url('/delete/') %>' + id;
       console.log(url);
       $.ajax({
       	type: 'DELETE',
@@ -32,7 +48,7 @@
       	// dataType: 'json',
       	success: function (json) {
       		console.log(json);
-      		eo.target.parentElement.remove();	
+          button.parentElement.parentElement.remove();
       	},
       	error: function (error) {
       		console.log('error: '+error);
@@ -41,7 +57,7 @@
     });
 
     $('.play').on('click', function (eo) {
-      var id = eo.target.value;
+      var id = eo.target.value || eo.target.parentElement.value;
       var url = '<%= url('/play/') %>' + id;
       console.log(url);
       $.ajax({

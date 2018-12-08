@@ -9,121 +9,151 @@
 
     <!-- Bootstrap -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/theme.bootstrap_3.min.css" rel="stylesheet">
 
   </head>
   <body>
     <div class="container"> 
-      <div class="button-group-justified button-group-lg">
-        <a href="<%= url('/playlist') %>" class="btn btn-info">Playlist</a>
-        <a href="<%= url('/listall') %>" class="btn btn-info">All List</a>
+      <div class="input-group">
+        <span class="input-group-btn">
+          <button class="btn btn-lg " id="previous"><span class="glyphicon glyphicon-step-backward"></span></button>
+        </span>
+        <input id="title" type="text" value="" class="">
+        <span class="input-group-btn">
+          <button class="btn btn-lg " id="next"><span class="glyphicon glyphicon-step-forward"></span></button>
+        </span>
       </div>
-      <div class="center-block">
-        <div class="row center-block">
-          <input id="title" type="text" value="">
-        </div>
-        <div class="row">
+      
+      <div class="row">
+        <div class="col-xs-6 col-xs-offset-3 text-center">
           <span id="elapsed"></span> / <span id="time"></span>
         </div>
-        <div class="row">
-          <button class="btn" id="previous"><span class="glyphicon glyphicon-step-backward"></span></button>
-          <button class="btn" id="play"><span class="glyphicon glyphicon-play"></span></button>
-          <button class="btn" id="pause"><span class="glyphicon glyphicon-pause"></span></button>
-          <button class="btn" id="next"><span class="glyphicon glyphicon-step-forward"></span></button>
-        </div>
-        <div class="row">
-          <button class="btn seekcur" value="-900"><span class="glyphicon glyphicon-fast-backward"> 15min</span></button>
-          <button class="btn seekcur" value="-60"><span class="glyphicon glyphicon-fast-backward"> 1min</span></button>
-          <button class="btn seekcur" value="-15"><span class="glyphicon glyphicon-fast-backward"> 15sec</span></button>
-          <button class="btn seekcur" value="+15"> 15sec <span class="glyphicon glyphicon-fast-forward"></span> </button>
-          <button class="btn seekcur" value="+60"> 1min <span class="glyphicon glyphicon-fast-forward"></span> </button>
-          <button class="btn seekcur" value="+900"> 15min <span class="glyphicon glyphicon-fast-forward"></span> </button>
+      </div>
+
+      <div class="row">
+        <div class="">
+          <button class="btn btn-lg seekcur col-xs-offset-1 col-xs-3" value="-15"> 15s <span class="glyphicon glyphicon-fast-backward"></span></button>
+          <button class="btn btn-lg btn-success col-xs-2" id="play"><span class="glyphicon glyphicon-play"></span></button>
+          <button class="btn btn-lg btn-info col-xs-2" id="pause"><span class="glyphicon glyphicon-pause"></span></button>
+          <button class="btn btn-lg seekcur col-xs-3" value="+15"> 15s <span class="glyphicon glyphicon-fast-forward"></span> </button>
         </div>
       </div>
+
+      <div class="row">
+        <div class="text-center">
+          <button class="btn btn-lg seekcur col-xs-3" value="-900"> 15m <span class="glyphicon glyphicon-fast-backward"></span></button>
+          <button class="btn btn-lg seekcur col-xs-3" value="-60"> 1m <span class="glyphicon glyphicon-fast-backward"></span></button>
+          <button class="btn btn-lg seekcur col-xs-3" value="+60"> 1m <span class="glyphicon glyphicon-fast-forward"></span> </button>
+          <button class="btn btn-lg seekcur col-xs-3" value="+900"> 15m <span class="glyphicon glyphicon-fast-forward"></span> </button>
+        </div>
+      </div>
+
+      <ul class="nav nav-tabs">
+        <li id="playlist-tab" role="presentation" ><a href="<%= url('/playlist') %>">Playlist</a></li>
+        <li id="alllist-tab" role="presentation"><a href="<%= url('/listall') %>">All List</a></li>
+      </ul>
+
+
+
       <%= yield %>
     </div>
 
     <script type="text/javascript">
+      var playing = false;
       var newyearsday=Date.parse('2017/1/1');
       setInterval(function () {
+        if (playing == false){
+          return;
+        }
         $.ajax({
          type: 'GET',
          dataType: 'json',
          url: '<%= url('/playing') %>'
         }).done( function (json) {
-           console.log(json);
+           // console.log(json);
            if (Object.keys(json).length > 0) {
              $('#title').val(json.title);
              var t = new Date(newyearsday+json.time*1000);
              $('#time').text(t.toLocaleTimeString());
              var e = new Date(newyearsday+json.elapsed*1000);
              $('#elapsed').text(e.toLocaleTimeString());
+             playing = (json.state == 'play');
            }
         }).fail( function (error) {
            console.log('error: '+error);
          
         });
        // body...
-      }, 300);
+      }, 1000);
+      
 
-        $(function () {
-          $('#play').on('click', function (eo) {
-            $.ajax({
-              type: 'POST',
-              url: '<%= url('/play') %>'
-            }).done( function(res) {
-              console.log(res);
-            }).fail( function(error) {
-              console.log('error: '+error);
-            });
+      $(function () {
+        $('#play').on('click', function (eo) {
+          $.ajax({
+            type: 'POST',
+            url: '<%= url('/play') %>'
+          }).done( function(res) {
+            console.log(res);
+            playing = true;
+          }).fail( function(error) {
+            console.log('error: '+error);
           });
-
-          $('#pause').on('click', function (eo) {
-            $.ajax({
-              type: 'POST',
-              url: '<%= url('/pause') %>'
-            }).done( function(res) {
-              console.log(res);
-            }).fail( function(error) {
-              console.log('error: '+error);
-            });
-          });
-
-          $('#next').on('click', function (eo) {
-            $.ajax({
-              type: 'POST',
-              url: '<%= url('/next') %>'
-            }).done( function(res) {
-              console.log(res);
-            }).fail( function(error) {
-              console.log('error: '+error);
-            });
-          });
-
-          $('#previous').on('click', function (eo) {
-            $.ajax({
-              type: 'POST',
-              url: '<%= url('/previous') %>'
-            }).done( function(res) {
-              console.log(res);
-            }).fail( function(error) {
-              console.log('error: '+error);
-            });
-          });
-
-          $('.seekcur').on('click', function (eo) {
-            var sec = eo.target.value || eo.target.parentElement.value;
-            console.log('seekcur '+sec);
-            $.ajax({
-              type: 'POST',
-              url: '<%= url('/seekcur/') %>' + sec
-            }).done( function(res) {
-              console.log(res);
-            }).fail( function(error) {
-              console.log('error: '+error);
-            });
-          });
-
         });
+
+
+        $('#pause').on('click', function (eo) {
+          $.ajax({
+            type: 'POST',
+            url: '<%= url('/pause') %>'
+          }).done( function(res) {
+            console.log(res);
+          }).fail( function(error) {
+            console.log('error: '+error);
+          });
+        });
+
+
+        $('#next').on('click', function (eo) {
+          $.ajax({
+            type: 'POST',
+            url: '<%= url('/next') %>'
+          }).done( function(res) {
+            console.log(res);
+          }).fail( function(error) {
+            console.log('error: '+error);
+          });
+        });
+
+
+        $('#previous').on('click', function (eo) {
+          $.ajax({
+            type: 'POST',
+            url: '<%= url('/previous') %>'
+          }).done( function(res) {
+            console.log(res);
+          }).fail( function(error) {
+            console.log('error: '+error);
+          });
+        });
+
+
+        $('.seekcur').on('click', function (eo) {
+          var sec = eo.target.value || eo.target.parentElement.value;
+          console.log('seekcur '+sec);
+          $.ajax({
+            type: 'POST',
+            url: '<%= url('/seekcur/') %>' + sec
+          }).done( function(res) {
+            console.log(res);
+          }).fail( function(error) {
+            console.log('error: '+error);
+          });
+        });
+
+
+        playing = true;
+
+      });
     </script>
   </body>
 </html>
