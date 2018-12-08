@@ -9,6 +9,7 @@ require "./lib/song"
 $mpdhost = "soundwave.local"
 $mpdport = 6600
 
+$music_dir = '/home/pi/radio'
 
 get '/' do
 	redirect '/listall'
@@ -179,5 +180,17 @@ get '/playing' do
 		return {}.to_json
 	end
 
+end
+
+
+delete '/kill_file/:file' do |file|
+	content_type :json
+	begin
+		FileUtils.rm File.join($music_dir, file)
+		{action: 'delete', file: file, responce: 'done'}.to_json
+	rescue Errno::ENOENT
+		status 404
+		"#{file}が存在しません"
+	end
 end
 
