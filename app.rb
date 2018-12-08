@@ -15,6 +15,19 @@ get '/' do
 end
 
 
+# ディスク残量(GB)
+def available
+	stat = Sys::Filesystem.stat('/')
+	available = (stat.blocks_available * stat.block_size).to_f / 1024 / 1024 / 1024
+end
+
+
+# ディスク容量(GB)
+def total
+	stat = Sys::Filesystem.stat('/')
+	total = (stat.blocks * stat.block_size).to_f / 1024 / 1024 / 1024
+end
+
 
 def fetch_songs(cmd)
 	songs = []
