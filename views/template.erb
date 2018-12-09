@@ -61,6 +61,19 @@
     <script type="text/javascript">
       var playing = false;
       var newyearsday=Date.parse('2017/1/1');
+
+      function zx(x) {
+        if (x<10) {
+          x = '0' + x;
+        }
+        return x;
+      }
+
+      function toDate(t) {
+        return t.getFullYear() + '/' + zx(t.getMonth()+1) + '/' + zx(t.getDate()) +
+          ' ' + t.getHours() + ':' + zx(t.getMinutes());
+      }
+
       setInterval(function () {
         if (playing == false){
           return;
@@ -72,7 +85,11 @@
         }).done( function (json) {
            // console.log(json);
            if (Object.keys(json).length > 0) {
-             $('#title').val(json.title);
+             var t = new Date(json.onair.substr(0,19)+"+09:00");
+             var onair = toDate(t);
+
+             $('#title').text(json.title + '   -   ' + onair);
+             
              var t = new Date(newyearsday+json.time*1000);
              $('#time').text(t.toLocaleTimeString());
              var e = new Date(newyearsday+json.elapsed*1000);

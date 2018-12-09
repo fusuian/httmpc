@@ -171,6 +171,7 @@ get '/playing' do
 			# pp ['songs: ', songs]
 			song = songs[0]
 			playing['title'] = song.title
+			playing['onair'] = song.onair if song.has_key? 'onair'
 			playing['time'] = song.time.to_i
 		end
 		
