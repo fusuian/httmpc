@@ -2,6 +2,7 @@ $(function () {
 $('#alllist-tab').addClass("active");
 $('#playlist-tab').removeClass("active");
 	$('#sorter').tablesorter();
+	var notyf = new Notyf();
 
 	$('.add').on('click', function (eo) {
 		var file = eo.target.value || eo.target.parentElement.value;
@@ -12,7 +13,7 @@ $('#playlist-tab').removeClass("active");
 			url: url, 
 			success: function (json) {
 				console.log(json);
-				alert(json.file + 'を登録');
+				notyf.confirm(json.file + 'を登録');
 			},
 			error: function (error) {
 				console.log('error: '+error);
@@ -38,11 +39,11 @@ $('#playlist-tab').removeClass("active");
 			success: function (json) {
 				console.log(json);
 				target.parentElement.parentElement.remove();
-				alert(json.file + 'を削除しました');
+				notyf.confirm(json.file + 'を削除しました');
 			},
 			error: function (error) {
 				console.log('error: '+error);
-				alert('削除できません: ' + error.status + ': ' + error.statusText);
+				notyf.alert('削除できません: ' + error.status + ': ' + error.statusText);
 			}
 		});
 	});
