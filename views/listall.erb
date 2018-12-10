@@ -1,6 +1,6 @@
 
 <p>ディスク残量 <%= "%.1f" % available %> / <%= "%.1f" % total %> GB</p>
-<table class="table table-striped" id="sorter">
+<table class="table table-striped table-condensed" id="sorter">
 	<thead>
 		<tr>
 			<th class="text-center">タイトル</th>	
@@ -11,7 +11,7 @@
 	<tbody>
 		<% @songs.each do |song| %>
 			<tr>
-				<td class="col-xs-1">
+				<td class="col-xs-5">
 					<button value="<%= song.file %>" class="btn add btn-block btn-info text-left "> 
 						<%= song.title %>
 					</button>
