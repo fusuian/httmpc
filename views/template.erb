@@ -29,8 +29,8 @@
         </div>
       </div>
       
-      <div class="row">
-        <div class="col-xs-8 col-xs-offset-2 text-center btn-lg">
+      <div class="progress">
+        <div id="playbar" class="progress-bar" role="progressbar" style="width: 0%;">
           <span id="elapsed"></span> / <span id="time"></span>
         </div>
       </div>
@@ -128,6 +128,8 @@
              var e = new Date(newyearsday+json.elapsed*1000);
              $('#elapsed').text(e.toLocaleTimeString());
              playing = (json.state == 'play');
+             var progress = 100 * json.elapsed / json.time
+             $('#playbar').css('width', progress + '%')
            }
         }).fail( function (error) {
            console.log('error: '+error);
