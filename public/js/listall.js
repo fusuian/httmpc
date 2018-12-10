@@ -6,7 +6,7 @@ $('#playlist-tab').removeClass("active");
 
 	$('.add').on('click', function (eo) {
 		var file = eo.target.value || eo.target.parentElement.value;
-		var url = '<%= url('/add/') %>' + file;
+		var url = "<%= url('/add/') %>" + file;
 		console.log(url);
 		$.ajax({
 			type: 'POST',
