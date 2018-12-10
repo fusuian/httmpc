@@ -31,7 +31,7 @@ $('#playlist-tab').removeClass("active");
 		if (!ok) {
 			return;
 		}
-		var url = '<%= url('/kill_file/') %>' + file;
+		var url = "<%= url('/kill_file/') %>" + file;
 		console.log(url);
 		$.ajax({
 			type: 'DELETE',
