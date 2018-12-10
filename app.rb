@@ -9,7 +9,7 @@ require "./lib/song"
 $mpdhost = "soundwave.local"
 $mpdport = 6600
 
-$music_dir = '/home/pi/radio'
+$music_dir = File.join ENV['HOME'], 'radio'
 
 get '/' do
 	redirect '/listall'
