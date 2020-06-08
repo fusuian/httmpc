@@ -15,7 +15,9 @@ class Song < Hash
 				self[k] = v.to_f
 			when 'pos', 'id'
 				self[k] = v.to_i
+			when 'title'
 			else
+				v.force_encoding(Encoding::UTF_8) unless v.encoding == Encoding::UTF_8
 				self[k] = v
 			end
 		end
