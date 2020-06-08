@@ -3,7 +3,7 @@ Bundler.setup
 Bundler.require
 
 require "time"
-require "httmpc/song"
+require "httmpc"
 
 $mpdhost = "soundwave.local"
 $mpdport = 6600
