@@ -1,15 +1,16 @@
 #!/usr/bin/env ruby
 Bundler.setup
 Bundler.require
-require "time"
-require "pp"
 
-require "./lib/song"
+require "time"
+require "httmpc/song"
 
 $mpdhost = "soundwave.local"
 $mpdport = 6600
 
 $music_dir = File.join ENV['HOME'], 'radio'
+
+set :views, Proc.new { File.join(root, "../views") }
 
 get '/' do
 	redirect '/listall'
@@ -51,7 +52,7 @@ end
 
 
 def term
-	term = Net::Telnet.new("Host" => $mpdhost, "Port" => $mpdport, 
+	term = Net::Telnet.new("Host" => $mpdhost, "Port" => $mpdport,
 				"Prompt"=>/OK/, "Telnetmode" => false, "Binmode" => true)
 	term.waitfor /^OK.*$/
 	res = yield term
@@ -87,7 +88,7 @@ post '/play' do
 end
 
 
-post '/pause' do 
+post '/pause' do
 	content_type :text
 	term {|t| t.cmd("pause") }
 end
@@ -116,7 +117,6 @@ get '/playlist' do
 		@title = "PlayList"
 		@songs = fetch_songs 'playlistinfo'
 		erb :playlist, layout: :template
-		# pp songs
 
 	rescue Errno::ECONNREFUSED
 		"#{$mpdhost}:#{$mpdport} mpdホストへの接続失敗"
@@ -130,14 +130,13 @@ get '/listall' do
 		res = term {|t| t.cmd("update") }
 		@songs = fetch_songs 'listallinfo'
 		@songs = @songs.sort_by {|s| s.onair }.reverse
-		
+
 		erb :listall, layout: :template
-		# pp songs
 
 	rescue Errno::ECONNREFUSED
 		"#{$mpdhost}:#{$mpdport} mpdホストへの接続失敗"
 
-	rescue Encoding::CompatibilityError 
+	rescue Encoding::CompatibilityError
 		"listallinfoのエンコード失敗"
 	end
 end
@@ -154,12 +153,12 @@ def stat2hash(res)
 	hash
 end
 
-get '/playing' do 
+get '/playing' do
 	begin
 		res = term {|t| t.cmd('status') }
 		return {}.to_json unless res
 		status = stat2hash(res)
-		
+
 		playing = {}
 		playing['state'] = status['state']
 
@@ -167,17 +166,16 @@ get '/playing' do
 			playing['title'] = 'stopping'
 			playing['elapsed'] = '--:--'
 			playing['time'] = '--:--'
-		
+
 		else
 			playing['elapsed'] = status['elapsed'].to_f
 			songs = fetch_songs('currentsong')
-			# pp ['songs: ', songs]
 			song = songs[0]
 			playing['title'] = song.title
 			playing['onair'] = song.onair if song.has_key? 'onair'
 			playing['time'] = song.time.to_i
 		end
-		
+
 		playing.to_json
 
 	rescue Errno::ECONNRESET, Errno::EPIPE
