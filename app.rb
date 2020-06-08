@@ -136,6 +136,9 @@ get '/listall' do
 
 	rescue Errno::ECONNREFUSED
 		"#{$mpdhost}:#{$mpdport} mpdホストへの接続失敗"
+
+	rescue Encoding::CompatibilityError 
+		"listallinfoのエンコード失敗"
 	end
 end
 
