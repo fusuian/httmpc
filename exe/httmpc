@@ -5,10 +5,10 @@ require "net/telnet"
 require "time"
 require "httmpc"
 
-$mpdhost = "soundwave.local"
+$mpdhost = "localhost"
 $mpdport = 6600
+$music_dir = '/home/pi/radio'
 
-$music_dir = File.join ENV['HOME'], 'radio'
 
 set :views, Proc.new { File.join(root, "../views") }
 
