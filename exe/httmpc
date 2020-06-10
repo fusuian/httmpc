@@ -197,3 +197,4 @@ delete '/kill_file/:file' do |file|
 	end
 end
 
+run Sinatra::Application.run!
