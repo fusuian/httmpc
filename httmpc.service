@@ -1,0 +1,14 @@
+[Unit]
+Description=httmpc - run mpd Web frontend
+After=network.target
+
+[Service]
+Type = simple
+Environment=PORT=80
+ExecStart = /usr/local/bin/httmpc -e production
+#Restart = always
+Restart = no
+
+[Install]
+WantedBy=multi-user.target
+
