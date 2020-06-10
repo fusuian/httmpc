@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
-Bundler.setup
-Bundler.require
-
+require "sinatra"
+require "sys-filesystem"
+require "net/telnet"
 require "time"
 require "httmpc"
 
