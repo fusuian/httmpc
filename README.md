@@ -27,7 +27,7 @@ httmpc 本体は gem でインストールできます。Ruby 2.5以降が必要
 
 コマンドラインオプションはsinatraに準じます、
 
-  Usage: httmpc [options]
+    Usage: httmpc [options]
       -p port                          set the port (default is 4567)
       -s server                        specify rack server/handler (default is thin)
       -q                               turn on quiet mode (default is off)
