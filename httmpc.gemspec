@@ -9,8 +9,8 @@ Gem::Specification.new do |spec|
   spec.authors       = ["ASAHI,Michiharu"]
   spec.email         = ["fusuian@gmail.com"]
 
-  spec.summary       = %q{mpd client for browser on Raspberry Pi.}
-  spec.description   = %q{}
+  spec.summary       = %q{mpd client for browser}
+  spec.description   = %q{An mpd client that acts as a web server. You can operate the mpd server from any browser.}
   spec.homepage      = "https://github.com/fusuian/httmpc"
   spec.license       = "MIT"
   spec.required_ruby_version = Gem::Requirement.new("~> 2.5")
