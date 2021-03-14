@@ -63,7 +63,7 @@ end
 
 post '/add/:file' do |file|
 	content_type :json
-	res = term {|t| t.cmd "add #{file}" }
+	res = term {|t| t.cmd %Q(add "#{file}") }
 	res.force_encoding('utf-8') if res
 	{action: 'add', file: file, responce: res}.to_json
 end
