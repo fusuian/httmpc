@@ -54,8 +54,8 @@ end
 
 def term
 	term = Net::Telnet.new("Host" => $mpdhost, "Port" => $mpdport,
-				"Prompt"=>/OK/, "Telnetmode" => false, "Binmode" => true)
-	term.waitfor /^OK.*$/
+				"Prompt"=>/^OK/, "Telnetmode" => false, "Binmode" => true)
+	term.waitfor /^OK/
 	res = yield term
 	term.close
 	res
