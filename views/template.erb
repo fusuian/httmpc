@@ -141,7 +141,7 @@
       $(function () {
         $('#play').on('click', function (eo) {
           $.ajax({
-            type: 'POST',
+            type: 'GET',
             url: '<%= url('/play') %>'
           }).done( function(res) {
             console.log(res);
@@ -154,7 +154,7 @@
 
         $('#pause').on('click', function (eo) {
           $.ajax({
-            type: 'POST',
+            type: 'GET',
             url: '<%= url('/pause') %>'
           }).done( function(res) {
             console.log(res);
@@ -166,7 +166,7 @@
 
         $('#next').on('click', function (eo) {
           $.ajax({
-            type: 'POST',
+            type: 'GET',
             url: '<%= url('/next') %>'
           }).done( function(res) {
             console.log(res);
@@ -178,7 +178,7 @@
 
         $('#previous').on('click', function (eo) {
           $.ajax({
-            type: 'POST',
+            type: 'GET',
             url: '<%= url('/previous') %>'
           }).done( function(res) {
             console.log(res);

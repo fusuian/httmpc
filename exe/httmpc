@@ -83,24 +83,24 @@ post '/play/:id' do |id|
 	{action: 'play', id: id, responce: res}.to_json
 end
 
-post '/play' do
+get '/play' do
 	content_type :text
 	term {|t| t.cmd("play") }
 end
 
 
-post '/pause' do
+get '/pause' do
 	content_type :text
 	term {|t| t.cmd("pause") }
 end
 
 
-post '/next' do
+get '/next' do
 	content_type :text
 	term {|t| t.cmd("next") }
 end
 
-post '/previous' do
+get '/previous' do
 	content_type :text
 	term {|t| t.cmd("previous") }
 end
