@@ -119,8 +119,8 @@ get '/playlist' do
 		@songs = fetch_songs 'playlistinfo'
 		erb :playlist, layout: :template
 
-	rescue Errno::ECONNREFUSED
-		"#{$mpdhost}:#{$mpdport} mpdホストへの接続失敗"
+	rescue Errno::ECONNREFUSED, Net::OpenTimeout
+		"<h1>#{$mpdhost}:#{$mpdport}: mpdホストへの接続失敗</h1><p>#{$!}</p>"
 	end
 end
 
@@ -134,8 +134,8 @@ get '/listall' do
 
 		erb :listall, layout: :template
 
-	rescue Errno::ECONNREFUSED
-		"#{$mpdhost}:#{$mpdport} mpdホストへの接続失敗"
+	rescue Errno::ECONNREFUSED, Net::OpenTimeout
+		"<h1>#{$mpdhost}:#{$mpdport}: mpdホストへの接続失敗</h1><p>#{$!}</p>"
 
 	rescue Encoding::CompatibilityError
 		"listallinfoのエンコード失敗"
