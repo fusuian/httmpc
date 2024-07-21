@@ -4,7 +4,6 @@ require "sys-filesystem"
 require "net/telnet"
 require "time"
 require "httmpc"
-require_relative "podcast_server"
 
 $mpdhost = "localhost"
 $mpdport = 6600
