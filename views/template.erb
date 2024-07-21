@@ -79,18 +79,27 @@
             </button>
           </div>
         </div>
-      </div>
-
-      <div id="content">
         <p> <br>
 
         <ul class="nav nav-tabs">
           <li id="playlist-tab" role="presentation" ><a href="<%= url('/playlist') %>">Playlist</a></li>
           <li id="alllist-tab" role="presentation"><a href="<%= url('/listall') %>">All List</a></li>
+          <li>
+            <button id="scrollTop" class="btn btn-default btn-lg">
+              <span class="glyphicon glyphicon-chevron-up" />
+            </button>
+          </li>
+          <li>
+            <button id="scrollBottom" class="btn btn-default btn-lg">
+              <span class="glyphicon glyphicon-chevron-down" />
+            </button>
         </ul>
 
         </p>
 
+      </div>
+
+      <div id="content">
         <%= yield %>
       </div>
     </div>
@@ -209,6 +218,13 @@
 
         playing = true;
 
+      });
+      document.getElementById('scrollTop').addEventListener('click', function() {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+
+      document.getElementById('scrollBottom').addEventListener('click', function() {
+        window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
       });
     </script>
   </body>
