@@ -12,82 +12,87 @@
     <link href="css/theme.bootstrap_3.min.css" rel="stylesheet">
     <link href="css/bootstrap_custom.css" rel="stylesheet">
     <link href="css/notyf.min.css" rel="stylesheet">
+    <link href="css/styles.css" rel="stylesheet">
 
   </head>
   <body>
     <div class="container"> 
-      <div class="row">
-        <div class="button-group">
-          <button class="btn btn-default btn-lg col-xs-offset-0 col-xs-2 col-md-offset-1 col-md-2" id="previous"><span class="glyphicon glyphicon-step-backward"></span></button>
-          <button type="text" disabled value="" class="btn btn-default btn-lg col-xs-8 col-md-6">
-            <span id="title" ></span>
-          </button>
-          <button class="btn btn-default btn-lg col-xs-2 col-md-2" id="next"><span class="glyphicon glyphicon-step-forward"></span></button>
+      <div id="player">
+        <div class="row">
+          <div class="button-group">
+            <button class="btn btn-default btn-lg col-xs-offset-0 col-xs-2 col-md-offset-1 col-md-2" id="previous"><span class="glyphicon glyphicon-step-backward"></span></button>
+            <button type="text" disabled value="" class="btn btn-default btn-lg col-xs-8 col-md-6">
+              <span id="title" ></span>
+            </button>
+            <button class="btn btn-default btn-lg col-xs-2 col-md-2" id="next"><span class="glyphicon glyphicon-step-forward"></span></button>
+          </div>
+        </div>
+
+        <div class="progress">
+          <div id="playbar" class="progress-bar" role="progressbar" style="width: 0%;">
+            <span id="elapsed"></span> / <span id="time"></span>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="button-group">
+            <button class="btn btn-default btn-lg seekcur col-md-offset-2 col-xs-offset-0 col-xs-2 col-md-1" value="-30">
+              30s
+            </button>
+            <button class="btn btn-default btn-lg seekcur col-xs-2 col-md-1" value="-15">
+               15<span class="glyphicon glyphicon-backward"></span>
+            </button>
+            <button class="btn btn-default btn-lg btn-success col-xs-2 col-md-2" id="play">
+              <span class="glyphicon glyphicon-play"></span>
+            </button>
+            <button class="btn btn-lg btn-info col-xs-2 col-md-2" id="pause">
+              <span class="glyphicon glyphicon-pause"></span>
+            </button>
+            <button class="btn btn-default btn-lg seekcur col-xs-2 col-md-1" value="+15">
+             <span class="glyphicon glyphicon-forward"></span>15
+            </button>
+            <button class="btn btn-default btn-lg seekcur col-xs-2 col-md-1" value="+30">
+             30s
+            </button>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="text-center">
+            <button class="btn btn-default btn-lg seekcur col-xs-2" value="-900">
+              15m
+            </button>
+            <button class="btn btn-default btn-lg seekcur col-xs-2" value="-300">
+               5
+            </button>
+            <button class="btn btn-default btn-lg seekcur col-xs-2" value="-60">
+              1<span class="glyphicon glyphicon-backward"></span>
+            </button>
+            <button class="btn btn-default btn-lg seekcur col-xs-2" value="+60">
+              <span class="glyphicon glyphicon-forward"></span>1
+            </button>
+            <button class="btn btn-default btn-lg seekcur col-xs-2" value="+300">
+              5
+            </button>
+            <button class="btn btn-default btn-lg seekcur col-xs-2" value="+900">
+              15m
+            </button>
+          </div>
         </div>
       </div>
-      
-      <div class="progress">
-        <div id="playbar" class="progress-bar" role="progressbar" style="width: 0%;">
-          <span id="elapsed"></span> / <span id="time"></span>
-        </div>
+
+      <div id="content">
+        <p> <br>
+
+        <ul class="nav nav-tabs">
+          <li id="playlist-tab" role="presentation" ><a href="<%= url('/playlist') %>">Playlist</a></li>
+          <li id="alllist-tab" role="presentation"><a href="<%= url('/listall') %>">All List</a></li>
+        </ul>
+
+        </p>
+
+        <%= yield %>
       </div>
-
-      <div class="row">
-        <div class="button-group">
-          <button class="btn btn-default btn-lg seekcur col-md-offset-2 col-xs-offset-0 col-xs-2 col-md-1" value="-30">
-            30s 
-          </button>
-          <button class="btn btn-default btn-lg seekcur col-xs-2 col-md-1" value="-15">
-             15<span class="glyphicon glyphicon-backward"></span> 
-          </button>
-          <button class="btn btn-default btn-lg btn-success col-xs-2 col-md-2" id="play">
-            <span class="glyphicon glyphicon-play"></span>
-          </button>
-          <button class="btn btn-lg btn-info col-xs-2 col-md-2" id="pause">
-            <span class="glyphicon glyphicon-pause"></span>
-          </button>
-          <button class="btn btn-default btn-lg seekcur col-xs-2 col-md-1" value="+15">
-           <span class="glyphicon glyphicon-forward"></span>15 
-          </button>
-          <button class="btn btn-default btn-lg seekcur col-xs-2 col-md-1" value="+30">
-           30s  
-          </button>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="text-center">
-          <button class="btn btn-default btn-lg seekcur col-xs-2" value="-900">
-            15m 
-          </button>
-          <button class="btn btn-default btn-lg seekcur col-xs-2" value="-300">
-             5 
-          </button>
-          <button class="btn btn-default btn-lg seekcur col-xs-2" value="-60">
-            1<span class="glyphicon glyphicon-backward"></span>
-          </button>
-          <button class="btn btn-default btn-lg seekcur col-xs-2" value="+60"> 
-            <span class="glyphicon glyphicon-forward"></span>1
-          </button>
-          <button class="btn btn-default btn-lg seekcur col-xs-2" value="+300">
-            5
-          </button>
-          <button class="btn btn-default btn-lg seekcur col-xs-2" value="+900">
-            15m
-          </button>
-        </div>
-      </div>
-
-      <p> <br>
-
-      <ul class="nav nav-tabs">
-        <li id="playlist-tab" role="presentation" ><a href="<%= url('/playlist') %>">Playlist</a></li>
-        <li id="alllist-tab" role="presentation"><a href="<%= url('/listall') %>">All List</a></li>
-      </ul>
-
-      </p>
-
-      <%= yield %>
     </div>
 
     <script type="text/javascript">
